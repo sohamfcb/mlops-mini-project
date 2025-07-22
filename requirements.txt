@@ -8,3 +8,4 @@ dvc
 mlflow
 dagshub
 nltk
+xgboost

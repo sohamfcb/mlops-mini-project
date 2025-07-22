@@ -28,6 +28,7 @@ dependencies = [
   "dagshub>=0.6.1",
   "nltk>=3.9.1",
   "httpx>=0.28.1",
+  "xgboost>=2.1.4",
 ]
 
 [project.optional-dependencies]
