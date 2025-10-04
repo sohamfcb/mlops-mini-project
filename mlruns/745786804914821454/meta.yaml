@@ -1,0 +1,6 @@
+artifact_location: file:///home/soham/campusx/dsmp2/mlops/emotion-detection/mlruns/745786804914821454
+creation_time: 1759568442916
+experiment_id: '745786804914821454'
+last_update_time: 1759568442916
+lifecycle_stage: active
+name: dvc-pipeline

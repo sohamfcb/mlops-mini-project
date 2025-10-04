@@ -1,0 +1,6 @@
+[core]
+    remote = origin
+['remote "myremote"']
+    url = /home/soham/campusx/dsmp2/mlops/emotion-detection/dvc-remote-storage
+['remote "origin"']
+    url = https://dagshub.com/sohamfcb/mlops-mini-project.dvc
