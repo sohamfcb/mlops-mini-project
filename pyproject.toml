@@ -32,6 +32,7 @@ dependencies = [
   "fastapi>=0.116.1",
   "uvicorn>=0.35.0",
   "awscli>=1.42.18",
+  "flask>=3.1.1",
 ]
 
 [project.optional-dependencies]
