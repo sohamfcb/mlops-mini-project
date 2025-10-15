@@ -91,3 +91,5 @@ target/
 .venv
 
 models/*
+
+*.pem
