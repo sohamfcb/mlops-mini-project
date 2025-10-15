@@ -79,6 +79,11 @@ jobs:
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -p 80:5000 --name my-app \
+            docker run -d \
+              --name my-app \
+              -p 80:5000 \
+              --restart unless-stopped \
               -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} \
               ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
+
+            echo "✅ Deployment done. Container is running in the background."
