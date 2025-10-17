@@ -73,3 +73,20 @@ jobs:
         if: success()
         run: |
           docker push 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
+
+      - name: Deploy to EC2
+        if: success()
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set default.region us-east-1
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 277707129180.dkr.ecr.us-east-1.amazonaws.com
+            docker pull 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
+            docker stop emotion-det || true
+            docker rm emotion-det || true
+            docker run -d -p 80:5000 -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} --name emotion-det 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
