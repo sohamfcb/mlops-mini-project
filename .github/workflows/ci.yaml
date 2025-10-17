@@ -51,39 +51,25 @@ jobs:
           DAGSHUB_PAT: ${{ secrets.DAGSHUB_PAT }}
         run: python -m unittest tests/test_flask_app.py
 
-      - name: login to docker hub
-        if: success()
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-      - name: build docker image
+      
+      - name: Login to AWS ECR
         if: success()
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest .
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 277707129180.dkr.ecr.us-east-1.amazonaws.com
 
-      - name: push image to docker hub
+      - name: Build Docker image
         if: success()
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
+          docker build -t emotion .
 
-      - name: Deploy to EC2
+      - name: Tag Docker image
         if: success()
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
-            docker stop my-app || true
-            docker rm my-app || true
-            docker run -d \
-              --name my-app \
-              -p 80:5000 \
-              --restart unless-stopped \
-              -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
+        run: |
+          docker tag emotion:latest 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
 
-            echo "✅ Deployment done. Container is running in the background."
+      - name: Push Docker image to AWS ECR
+        if: success()
+        run: |
+          docker push 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
