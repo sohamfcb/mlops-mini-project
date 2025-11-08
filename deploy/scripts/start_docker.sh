@@ -4,7 +4,7 @@
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 277707129180.dkr.ecr.us-east-1.amazonaws.com
 
 # Pull the image
-docker pull 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:v1
+docker pull 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion-det:v1
 
 # Stop container if running
 docker stop emotion-det || true
