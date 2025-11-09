@@ -62,17 +62,17 @@ jobs:
       - name: Build Docker image
         if: success()
         run: |
-          docker build -t emotion .
+          docker build -t emotion-det .
 
       - name: Tag Docker image
         if: success()
         run: |
-          docker tag emotion:latest 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
+          docker tag emotion-det:latest 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion-det:latest
 
       - name: Push Docker image to AWS ECR
         if: success()
         run: |
-          docker push 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion:latest
+          docker push 277707129180.dkr.ecr.us-east-1.amazonaws.com/emotion-det:latest
 
       # - name: Deploy to EC2
       #   if: success()
